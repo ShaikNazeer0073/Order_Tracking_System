@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
 const protect = require("./middleware/authMiddleware");
+const authorizeRoles = require("./middleware/roleMiddleware");
 
 
 
@@ -17,6 +18,15 @@ app.use(express.json());
 app.get("/api/auth/me", protect, (req, res) => {
   res.json(req.user);
 });
+app.get(
+  "/api/admin",
+  protect,
+  authorizeRoles("admin"),
+  (req, res) => {
+    res.json({ message: "Welcome Admin" });
+  }
+);
+
 
 
 app.get("/", (req, res) => {
