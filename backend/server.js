@@ -5,6 +5,10 @@ const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
 const protect = require("./middleware/authMiddleware");
 const authorizeRoles = require("./middleware/roleMiddleware");
+const orderRoutes = require("./routes/orderRoutes");
+
+app.use("/api/orders", orderRoutes);
+
 
 
 
