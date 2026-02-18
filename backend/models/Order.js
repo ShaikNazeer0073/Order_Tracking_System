@@ -28,11 +28,16 @@ isPaid: {
   type: Boolean,
   default: false
 },
-paidAt: Date
+paidAt: Date,
 
-    
+   tracking: [
+      {
+        status: { type: String, required: true },
+        updatedAt: { type: Date, default: Date.now },
+        updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" } // who updated
+      }
+    ]
   },
-  
   { timestamps: true }
 );
 
