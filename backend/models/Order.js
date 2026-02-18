@@ -6,6 +6,7 @@ const orderSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    
     quantity: {
       type: Number,
       required: true,
@@ -19,8 +20,19 @@ const orderSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-    },
+    },paymentStatus: {
+  type: String,
+  default: "Pending"
+},
+isPaid: {
+  type: Boolean,
+  default: false
+},
+paidAt: Date
+
+    
   },
+  
   { timestamps: true }
 );
 
