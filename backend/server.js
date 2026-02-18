@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
+const protect = require("./middleware/authMiddleware");
+
 
 
 dotenv.config();
@@ -12,6 +14,10 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use(cors());
 app.use(express.json());
+app.get("/api/auth/me", protect, (req, res) => {
+  res.json(req.user);
+});
+
 
 app.get("/", (req, res) => {
   res.send("Order Tracking API Running");
