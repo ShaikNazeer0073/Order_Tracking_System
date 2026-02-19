@@ -1,34 +1,48 @@
 import React, { useState } from "react";
-import "./Dashboard.css"; // reuse your existing styles
+import "./Dashboard.css";
 
 function CreateOrder() {
   const [productName, setProductName] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const [createdOrder, setCreatedOrder] = useState(null);
   const [msg, setMsg] = useState("");
 
   const createOrder = async (e) => {
     e.preventDefault();
     setMsg("");
+    setCreatedOrder(null);
 
     const token = localStorage.getItem("token");
-    const res = await fetch("http://localhost:5000/api/orders", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-      },
-      body: JSON.stringify({ productName, quantity }),
-    });
 
-    const data = await res.json();
+    try {
+      const res = await fetch("http://localhost:5000/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({ productName, quantity }),
+      });
 
-    if (res.ok) {
-      setProductName("");
-      setQuantity(1);
-      setMsg("✅ Order created!");
-    } else {
-      setMsg(data.message || "❌ Failed");
+      const data = await res.json();
+
+      if (res.ok) {
+        setProductName("");
+        setQuantity(1);
+        setCreatedOrder(data);
+        setMsg("✅ Order created successfully!");
+      } else {
+        setMsg(data.message || "❌ Failed to create order");
+      }
+    } catch (err) {
+      setMsg("❌ Server error");
     }
+  };
+
+  const copyId = async () => {
+    if (!createdOrder?._id) return;
+    await navigator.clipboard.writeText(createdOrder._id);
+    setMsg("✅ Order ID copied!");
   };
 
   return (
@@ -40,6 +54,7 @@ function CreateOrder() {
       <div className="create-order-card">
         <h3>New Order</h3>
         {msg && <p>{msg}</p>}
+
         <form onSubmit={createOrder}>
           <input
             type="text"
@@ -57,6 +72,13 @@ function CreateOrder() {
           />
           <button type="submit">Create Order</button>
         </form>
+
+        {createdOrder && (
+          <div style={{ marginTop: 16 }}>
+            <p><strong>Order ID:</strong> {createdOrder._id}</p>
+            <button onClick={copyId}>Copy Order ID 📋</button>
+          </div>
+        )}
       </div>
     </div>
   );
