@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
-function Login({ setUser }) {
+function Login() {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -23,10 +26,14 @@ function Login({ setUser }) {
 
       if (res.ok) {
         localStorage.setItem("token", data.token);
-        setUser(true);
+        localStorage.setItem("user", JSON.stringify(data.user));
+
+        // 🔥 Redirect after login
+        navigate("/dashboard");
       } else {
         setError(data.message || "Invalid credentials");
       }
+
     } catch (err) {
       setError("Server error. Try again.");
     }

@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 
-function Dashboard({ setUser }) {
+function Dashboard() {
+  const navigate = useNavigate();
+
   const [orders, setOrders] = useState([]);
   const [productName, setProductName] = useState("");
   const [quantity, setQuantity] = useState(1);
@@ -48,28 +51,30 @@ function Dashboard({ setUser }) {
       fetchOrders();
     }
   };
+
   const handlePay = async (id) => {
-  const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-  const res = await fetch(
-    `http://localhost:5000/api/orders/pay/${id}`,
-    {
-      method: "PUT",
-      headers: {
-        Authorization: "Bearer " + token,
-      },
+    const res = await fetch(
+      `http://localhost:5000/api/orders/pay/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+
+    if (res.ok) {
+      fetchOrders();
     }
-  );
+  };
 
-  if (res.ok) {
-    fetchOrders();
-  }
-};
-
-
+  // ✅ FIXED LOGOUT
   const logout = () => {
     localStorage.removeItem("token");
-    setUser(false);
+    localStorage.removeItem("user");
+    navigate("/login");
   };
 
   return (
@@ -109,19 +114,18 @@ function Dashboard({ setUser }) {
           <p>No orders found</p>
         ) : (
           orders.map((order) => (
-           <div key={order._id} className="order-card">
-  <h4>{order.productName}</h4>
-  <p>Quantity: {order.quantity}</p>
-  <p>Status: {order.status}</p>
-  <p>Payment: {order.paymentStatus}</p>
+            <div key={order._id} className="order-card">
+              <h4>{order.productName}</h4>
+              <p>Quantity: {order.quantity}</p>
+              <p>Status: {order.status}</p>
+              <p>Payment: {order.paymentStatus}</p>
 
-  {!order.isPaid && (
-    <button onClick={() => handlePay(order._id)}>
-      Pay Now 💳
-    </button>
-  )}
-</div>
-
+              {!order.isPaid && (
+                <button onClick={() => handlePay(order._id)}>
+                  Pay Now 💳
+                </button>
+              )}
+            </div>
           ))
         )}
       </div>
