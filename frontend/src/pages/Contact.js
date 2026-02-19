@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./Contact.css";
 import axios from "axios";
+import Navbar from "../components/Navbar";
+
 
 function Contact() {
   const [formData, setFormData] = useState({

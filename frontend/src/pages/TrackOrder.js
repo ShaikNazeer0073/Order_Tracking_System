@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import Navbar from "../components/Navbar";
 import "./TrackOrder.css";
 
 function TrackOrder() {
   const [orderId, setOrderId] = useState("");
   const [tracking, setTracking] = useState([]);
+  const [expectedDelivery, setExpectedDelivery] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -13,21 +15,32 @@ function TrackOrder() {
     e.preventDefault();
     setError("");
     setTracking([]);
+    setExpectedDelivery(null);
     setLoading(true);
 
     try {
-      const res = await fetch(`http://localhost:5000/api/orders/track/${orderId}`, {
-        headers: { Authorization: "Bearer " + token },
+      // ✅ if logged in -> protected route, else -> public route
+      const url = token
+        ? `http://localhost:5000/api/orders/track/${orderId}`
+        : `http://localhost:5000/api/public/track/${orderId}`;
+
+      const res = await fetch(url, {
+        headers: token ? { Authorization: "Bearer " + token } : {},
       });
 
       const data = await res.json();
 
-      if (res.ok) {
-        const steps = (data.tracking || []).slice().reverse(); // latest first
-        setTracking(steps);
-      } else {
+      if (!res.ok) {
         setError(data.message || "Tracking not found");
+        setLoading(false);
+        return;
       }
+
+      // Public returns expectedDelivery, protected might not — handle both
+      if (data.expectedDelivery) setExpectedDelivery(data.expectedDelivery);
+
+      const steps = (data.tracking || []).slice().sort((a, b) => new Date(a.time) - new Date(b.time));
+      setTracking(steps);
     } catch (err) {
       setError("Server error");
     } finally {
@@ -35,60 +48,67 @@ function TrackOrder() {
     }
   };
 
-  const formatTime = (d) => {
-    const dt = new Date(d);
-    return dt.toLocaleString();
-  };
+  const formatTime = (d) => new Date(d).toLocaleString();
+
+  const now = new Date();
 
   return (
-    <div className="track-wrap">
-      <h1>Track Order 🚚</h1>
-      <p className="sub">Paste your Order ID to see live tracking updates.</p>
+    <>
+      <Navbar />
+      <div className="track-wrap">
+        <h1>Track Order 🚚</h1>
+        <p className="sub">Paste your Order ID to see tracking updates.</p>
 
-      <form className="track-form" onSubmit={fetchTracking}>
-        <input
-          value={orderId}
-          onChange={(e) => setOrderId(e.target.value.trim())}
-          placeholder="Enter Order ID (example: 6995...)"
-          required
-        />
-        <button type="submit">{loading ? "Tracking..." : "Track"}</button>
-      </form>
+        <form className="track-form" onSubmit={fetchTracking}>
+          <input
+            value={orderId}
+            onChange={(e) => setOrderId(e.target.value.trim())}
+            placeholder="Enter Order ID (example: 6995...)"
+            required
+          />
+          <button type="submit">{loading ? "Tracking..." : "Track"}</button>
+        </form>
 
-      {error && <p className="err">{error}</p>}
+        {error && <p className="err">{error}</p>}
 
-      {tracking.length > 0 && (
-        <div className="timeline-card">
-          {tracking.map((t, idx) => (
-            <div key={t._id || idx} className={`timeline-row ${idx === 0 ? "active" : ""}`}>
-              <div className="time">{formatTime(t.time || t.updatedAt)}</div>
+        {expectedDelivery && (
+          <div className="eta">
+            <strong>Expected Delivery:</strong> {new Date(expectedDelivery).toDateString()}
+          </div>
+        )}
 
-              <div className="line">
-                <div className={`dot ${idx === 0 ? "dot-active" : ""}`}></div>
-                {idx !== tracking.length - 1 && <div className="stem"></div>}
-              </div>
+        {tracking.length > 0 && (
+          <div className="timeline-card">
+            {tracking.map((t, idx) => {
+              const isDone = new Date(t.time) <= now;
+              const isActive =
+                isDone &&
+                (idx === tracking.length - 1 || new Date(tracking[idx + 1].time) > now);
 
-              <div className="text">
-                <div className={`status ${idx === 0 ? "status-active" : ""}`}>
-                  {t.status}
+              return (
+                <div
+                  key={t._id || idx}
+                  className={`timeline-row fade-in ${isActive ? "active" : ""} ${isDone ? "done" : "pending"}`}
+                  style={{ animationDelay: `${idx * 60}ms` }}
+                >
+                  <div className="time">{formatTime(t.time)}</div>
+
+                  <div className="line">
+                    <div className={`dot ${isActive ? "dot-active" : isDone ? "dot-done" : ""}`}></div>
+                    {idx !== tracking.length - 1 && <div className={`stem ${isDone ? "stem-done" : ""}`}></div>}
+                  </div>
+
+                  <div className="text">
+                    <div className={`status ${isActive ? "status-active" : ""}`}>{t.status}</div>
+                    <div className="note">{t.note || "Tracking update received."}</div>
+                  </div>
                 </div>
-                <div className="note">
-                  {t.note
-                    ? t.note
-                    : t.status === "Pending"
-                    ? "Order placed successfully."
-                    : t.status === "Shipped"
-                    ? "Your parcel is on the way to the next location."
-                    : t.status === "Delivered"
-                    ? "Delivered successfully."
-                    : "Tracking update received."}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </>
   );
 }
 

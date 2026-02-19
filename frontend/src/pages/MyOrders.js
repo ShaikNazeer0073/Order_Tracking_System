@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Dashboard.css";
+import Navbar from "../components/Navbar";
+
 
 function MyOrders() {
   const [orders, setOrders] = useState([]);
@@ -59,6 +61,11 @@ function MyOrders() {
     if (res.ok) fetchOrders();
   };
 
+  const copyId = async (id) => {
+    await navigator.clipboard.writeText(id);
+    alert("✅ Order ID copied!");
+  };
+
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
@@ -72,6 +79,24 @@ function MyOrders() {
           orders.map((o) => (
             <div key={o._id} className="order-card">
               <h4>{o.productName}</h4>
+
+              {/* ✅ SHOW ORDER ID */}
+              <p>
+                <strong>Order ID:</strong> {o._id}{" "}
+                <button
+                  style={{
+                    marginLeft: 8,
+                    padding: "4px 10px",
+                    borderRadius: 8,
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => copyId(o._id)}
+                >
+                  Copy 📋
+                </button>
+              </p>
+
               <p>Qty: {o.quantity}</p>
               <p>Status: {o.status}</p>
               <p>Payment: {o.paymentStatus}</p>
