@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "./Login.css";
 
 function Login() {
@@ -16,9 +16,7 @@ function Login() {
     try {
       const res = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
@@ -28,12 +26,14 @@ function Login() {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
 
-        // 🔥 Redirect after login
-        navigate("/dashboard");
+        // ✅ tell App.js to re-check localStorage NOW
+        window.dispatchEvent(new Event("authChange"));
+
+        // ✅ after login, go back to website home
+        navigate("/");
       } else {
         setError(data.message || "Invalid credentials");
       }
-
     } catch (err) {
       setError("Server error. Try again.");
     }
@@ -43,8 +43,6 @@ function Login() {
     <div className="login-container">
       <div className="login-card">
         <h2>Welcome Back 👋</h2>
-        <p className="subtitle">Login to your Order Dashboard</p>
-
         {error && <div className="error">{error}</div>}
 
         <form onSubmit={handleLogin}>
@@ -66,6 +64,10 @@ function Login() {
 
           <button type="submit">Login</button>
         </form>
+
+        <p className="bottom-text">
+          New here? <Link to="/register">Sign Up</Link>
+        </p>
       </div>
     </div>
   );
