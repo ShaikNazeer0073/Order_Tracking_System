@@ -1,3 +1,5 @@
+
+
 import React from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
@@ -145,7 +147,7 @@ function Home() {
             <span>🐝</span>
             <span className="logo-text">Buzz<span className="highlight">Track</span></span>
           </div>
-          <p className="footer-text">© 2026 BuzzTrack. Built with ❤️ and MERN.</p>
+          <p className="footer-text">2026 BuzzTrack</p>
           <div className="footer-links">
             <Link to="/about">About</Link>
             <Link to="/contact">Contact</Link>
