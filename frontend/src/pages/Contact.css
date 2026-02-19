@@ -1,36 +1,98 @@
-.contact {
-  padding: 60px;
-  text-align: center;
+/* ============================== */
+/*        CONTACT PAGE            */
+/* ============================== */
+
+.contact-page {
+  max-width: 540px;
+  margin: 0 auto;
+  padding: 60px 20px 80px;
+  animation: fadeInUp 0.5s ease;
 }
 
-.contact h1 {
-  margin-bottom: 30px;
+.contact-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.contact-header h1 {
+  font-size: clamp(30px, 5vw, 38px);
+  font-weight: 900;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.contact-header p {
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+
+.contact-card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 32px 26px;
+  box-shadow: var(--shadow);
+}
+
+.contact-alert {
+  padding: 12px 16px;
+  border-radius: var(--radius-xs);
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 18px;
+  animation: slideDown 0.3s ease;
+}
+
+.contact-alert.success {
+  background: rgba(74, 222, 128, 0.1);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  color: #86efac;
+}
+
+.contact-alert.error {
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  color: #fca5a5;
 }
 
 .contact-form {
-  max-width: 500px;
-  margin: auto;
   display: flex;
   flex-direction: column;
+  gap: 18px;
 }
 
-.contact-form input,
-.contact-form textarea {
-  margin-bottom: 15px;
-  padding: 12px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.contact-form button {
-  padding: 12px;
+.form-group label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.contact-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: var(--gradient);
+  color: #111;
   border: none;
-  background: #38bdf8;
-  font-weight: bold;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
+  font-weight: 800;
+  font-size: 15px;
   cursor: pointer;
+  transition: all var(--transition);
+  box-shadow: 0 4px 15px var(--accent-glow);
 }
 
-.contact-form button:hover {
-  opacity: 0.9;
+.contact-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px var(--accent-glow);
 }

@@ -7,6 +7,7 @@ function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState("");
 
   const handleLogin = async (e) => {
@@ -22,51 +23,71 @@ function Login() {
 
       const data = await res.json();
 
-      if (res.ok) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-
-        // ✅ tell App.js to re-check localStorage NOW
-        window.dispatchEvent(new Event("authChange"));
-
-        // ✅ after login, go back to website home
-        navigate("/");
-      } else {
+      if (!res.ok) {
         setError(data.message || "Invalid credentials");
+        return;
       }
+
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      window.dispatchEvent(new Event("authChange"));
+
+      if (data.user.role === "admin") navigate("/admin");
+      else navigate("/");
     } catch (err) {
       setError("Server error. Try again.");
     }
   };
 
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <h2>Welcome Back 👋</h2>
-        {error && <div className="error">{error}</div>}
+    <div className="auth-container">
+      <div className="auth-bg-orb auth-orb-1"></div>
+      <div className="auth-bg-orb auth-orb-2"></div>
+
+      <div className="auth-card">
+        <div className="auth-icon">👋</div>
+        <h2>Welcome Back</h2>
+        <p className="auth-subtitle">Login to your account</p>
+
+        {error && <div className="auth-error">{error}</div>}
 
         <form onSubmit={handleLogin}>
-          <input
-            type="email"
-            placeholder="Email address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <div className="auth-field">
+            <label>Email</label>
+            <input
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div className="auth-field">
+            <label>Password</label>
+            <div className="pass-wrap">
+              <input
+                type={showPass ? "text" : "password"}
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button
+                type="button"
+                className="pass-toggle"
+                onClick={() => setShowPass(!showPass)}
+              >
+                {showPass ? "🙈" : "👁️"}
+              </button>
+            </div>
+          </div>
 
-          <button type="submit">Login</button>
+          <button type="submit" className="auth-submit">Login</button>
         </form>
 
-        <p className="bottom-text">
-          New here? <Link to="/register">Sign Up</Link>
+        <p className="auth-footer">
+          New here? <Link to="/register">Create an account</Link>
         </p>
       </div>
     </div>

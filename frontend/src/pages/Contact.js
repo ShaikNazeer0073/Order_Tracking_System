@@ -3,13 +3,13 @@ import "./Contact.css";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 
-
 function Contact() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: ""
   });
+  const [status, setStatus] = useState("");
 
   const handleChange = (e) => {
     setFormData({
@@ -22,48 +22,77 @@ function Contact() {
     e.preventDefault();
     try {
       await axios.post("http://localhost:5000/api/messages", formData);
-      alert("Message sent successfully!");
+      setStatus("success");
       setFormData({ name: "", email: "", message: "" });
+      setTimeout(() => setStatus(""), 3000);
     } catch (error) {
-      alert("Error sending message");
+      setStatus("error");
+      setTimeout(() => setStatus(""), 3000);
     }
   };
 
   return (
-    <div className="contact">
-      <h1>Contact Us</h1>
+    <>
+      <Navbar />
+      <div className="contact-page">
+        <div className="contact-header">
+          <h1>Get In <span className="gradient-text">Touch</span></h1>
+          <p>Have a question or feedback? We'd love to hear from you.</p>
+        </div>
 
-      <form className="contact-form" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Your Name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
+        <div className="contact-card">
+          {status === "success" && (
+            <div className="contact-alert success">✅ Message sent successfully!</div>
+          )}
+          {status === "error" && (
+            <div className="contact-alert error">❌ Error sending message. Try again.</div>
+          )}
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Your Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
+          <form className="contact-form" onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label>Your Name</label>
+              <input
+                type="text"
+                name="name"
+                placeholder="John Doe"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-        <textarea
-          name="message"
-          placeholder="Your Message"
-          rows="5"
-          value={formData.message}
-          onChange={handleChange}
-          required
-        />
+            <div className="form-group">
+              <label>Email Address</label>
+              <input
+                type="email"
+                name="email"
+                placeholder="john@example.com"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-        <button type="submit">Send Message</button>
-      </form>
-    </div>
+            <div className="form-group">
+              <label>Message</label>
+              <textarea
+                name="message"
+                placeholder="Tell us what's on your mind..."
+                rows="5"
+                value={formData.message}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <button type="submit" className="contact-submit">
+              Send Message
+              <span>→</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </>
   );
 }
 

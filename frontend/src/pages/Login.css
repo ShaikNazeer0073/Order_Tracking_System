@@ -1,85 +1,182 @@
-* {
-  box-sizing: border-box;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
+/* ============================== */
+/*    AUTH PAGES (Login/Register) */
+/* ============================== */
 
-.login-container {
-  height: 100vh;
+.auth-container {
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  padding: 40px 20px;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
 }
 
-.login-card {
-  background: white;
-  padding: 40px;
+/* Warm glow */
+.auth-bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.auth-orb-1 {
+  width: 400px;
+  height: 400px;
+  background: rgba(251, 191, 36, 0.07);
+  top: -100px;
+  right: -50px;
+}
+
+.auth-orb-2 {
   width: 350px;
-  border-radius: 15px;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  height: 350px;
+  background: rgba(245, 158, 11, 0.05);
+  bottom: -80px;
+  left: -60px;
+}
+
+/* Card */
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 40px 30px;
+  box-shadow: var(--shadow-lg);
   text-align: center;
-  animation: fadeIn 0.6s ease-in-out;
+  position: relative;
+  z-index: 1;
+  animation: fadeInUp 0.5s ease;
 }
 
-.login-card h2 {
-  margin-bottom: 5px;
-}
-
-.subtitle {
-  font-size: 14px;
-  color: gray;
-  margin-bottom: 20px;
-}
-
-.login-card input {
-  width: 100%;
-  padding: 12px;
-  margin: 10px 0;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  transition: 0.3s;
-}
-
-.login-card input:focus {
-  border-color: #667eea;
-  outline: none;
-  box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
-}
-
-.login-card button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 15px;
-  border: none;
-  border-radius: 8px;
-  background: #667eea;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.login-card button:hover {
-  background: #5a67d8;
-  transform: translateY(-2px);
-}
-
-.error {
-  background: #ffe5e5;
-  color: #d8000c;
-  padding: 10px;
-  border-radius: 6px;
+.auth-icon {
+  font-size: 36px;
   margin-bottom: 10px;
-  font-size: 14px;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(15px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.auth-card h2 {
+  font-size: 26px;
+  font-weight: 900;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.auth-subtitle {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-bottom: 28px;
+}
+
+/* Error / Success */
+.auth-error {
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  color: #fca5a5;
+  padding: 12px 14px;
+  border-radius: var(--radius-xs);
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 18px;
+  animation: slideDown 0.3s ease;
+}
+
+.auth-success {
+  background: rgba(74, 222, 128, 0.1);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  color: #86efac;
+  padding: 12px 14px;
+  border-radius: var(--radius-xs);
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 18px;
+  animation: slideDown 0.3s ease;
+}
+
+/* Fields */
+.auth-field {
+  margin-bottom: 18px;
+  text-align: left;
+}
+
+.auth-field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pass-wrap {
+  position: relative;
+}
+
+.pass-wrap input {
+  padding-right: 48px;
+}
+
+.pass-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px;
+  opacity: 0.6;
+  transition: opacity var(--transition);
+}
+
+.pass-toggle:hover {
+  opacity: 1;
+}
+
+/* Submit */
+.auth-submit {
+  width: 100%;
+  padding: 14px;
+  margin-top: 6px;
+  background: var(--gradient);
+  color: #111;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 800;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all var(--transition);
+  box-shadow: 0 4px 15px var(--accent-glow);
+}
+
+.auth-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px var(--accent-glow);
+}
+
+/* Footer link */
+.auth-footer {
+  margin-top: 22px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.auth-footer a {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.auth-field select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+.auth-field select option {
+  background: var(--bg2);
+  color: var(--text);
 }

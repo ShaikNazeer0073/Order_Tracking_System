@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
-import Login from "./pages/Login";
 import Home from "./pages/Home";
 import About from "./pages/About";
-import Register from "./pages/Register";
 import Contact from "./pages/Contact";
-import AdminPanel from "./pages/AdminPanel";
+
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 import CreateOrder from "./pages/CreateOrder";
 import MyOrders from "./pages/MyOrders";
 import TrackOrder from "./pages/TrackOrder";
+
+import AdminPanel from "./pages/AdminPanel";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -19,9 +21,8 @@ function App() {
   );
 
   const syncAuth = () => {
-    const t = localStorage.getItem("token");
+    setToken(localStorage.getItem("token"));
     const u = localStorage.getItem("user");
-    setToken(t);
     setUser(u ? JSON.parse(u) : null);
   };
 
@@ -36,16 +37,16 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Public pages */}
+        {/* Public */}
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
 
-        {/* Auth pages */}
+        {/* Auth */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* USER pages */}
+        {/* User protected */}
         <Route
           path="/create-order"
           element={token ? <CreateOrder /> : <Navigate to="/login" />}
@@ -59,14 +60,11 @@ function App() {
           element={token ? <TrackOrder /> : <Navigate to="/login" />}
         />
 
-        {/* ADMIN only */}
+        {/* Admin protected */}
         <Route
           path="/admin"
           element={token && isAdmin ? <AdminPanel /> : <Navigate to="/" />}
         />
-
-        {/* fallback */}
-        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
   );

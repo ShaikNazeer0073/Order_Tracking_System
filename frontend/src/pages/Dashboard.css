@@ -1,69 +1,114 @@
+/* ============================== */
+/*    DASHBOARD / USER PAGES      */
+/* ============================== */
+
 .dashboard-container {
-  padding: 40px;
-  background: #f4f6fb;
-  min-height: 100vh;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px 60px;
+  animation: fadeInUp 0.5s ease;
 }
 
-.dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.dashboard-header button {
-  padding: 8px 15px;
-  border: none;
-  border-radius: 6px;
-  background: #e53e3e;
-  color: white;
-  cursor: pointer;
+.dashboard-header h1 {
+  font-size: clamp(24px, 4vw, 32px);
+  margin-bottom: 24px;
+  font-weight: 900;
+  color: var(--text);
 }
 
 .create-order-card {
-  background: white;
-  padding: 20px;
-  margin-top: 20px;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
 }
 
-.create-order-card input {
-  padding: 10px;
-  margin-right: 10px;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-}
-    .order-card button {
-  margin-top: 10px;
-  padding: 8px 12px;
-  border: none;
-  border-radius: 6px;
-  background: #38a169;
-  color: white;
-  cursor: pointer;
+.create-order-card h3 {
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--accent);
 }
 
-.order-card button:hover {
-  background: #2f855a;
+.create-order-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
 .create-order-card button {
-  padding: 10px 15px;
+  background: var(--gradient);
+  color: #111;
+  padding: 13px 20px;
+  font-weight: 800;
+  border-radius: var(--radius-sm);
   border: none;
-  border-radius: 6px;
-  background: #667eea;
-  color: white;
   cursor: pointer;
+  transition: all var(--transition);
+  box-shadow: 0 4px 15px var(--accent-glow);
+  font-size: 14px;
 }
 
+.create-order-card button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px var(--accent-glow);
+}
+
+/* Order cards */
 .orders-section {
-  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .order-card {
-  background: white;
-  padding: 15px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  transition: all var(--transition);
+}
+
+.order-card:hover {
+  border-color: rgba(251, 191, 36, 0.15);
+}
+
+.order-card h4 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.order-card p {
+  margin: 6px 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.order-card p strong {
+  color: var(--text);
+}
+
+.order-card button {
   margin-top: 10px;
-  border-radius: 10px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  margin-right: 8px;
+  padding: 10px 16px;
+  border-radius: var(--radius-xs);
+  font-weight: 700;
+  font-size: 13px;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition);
+  background: var(--glass);
+  color: var(--text);
+  border: 1px solid var(--glass-border);
+}
+
+.order-card button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
 }

@@ -1,0 +1,317 @@
+/* ============================== */
+/*  DESIGN SYSTEM — BUZZTRACK     */
+/*  Yellow & Black Theme          */
+/* ============================== */
+
+:root {
+  /* Backgrounds */
+  --bg: #0f0f0f;
+  --bg2: #1a1a1a;
+  --bg3: #252525;
+
+  /* Surface / Cards */
+  --card: rgba(255, 255, 255, 0.04);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --card-hover: rgba(255, 255, 255, 0.07);
+
+  /* Text */
+  --text: #f5f5f5;
+  --text-secondary: #b0b0b0;
+  --text-muted: #737373;
+
+  /* Accent — Warm Yellow */
+  --accent: #fbbf24;
+  --accent2: #f59e0b;
+  --accent-glow: rgba(251, 191, 36, 0.2);
+  --gradient: linear-gradient(135deg, #fbbf24, #f59e0b);
+
+  /* Status */
+  --success: #4ade80;
+  --warning: #fb923c;
+  --danger: #f87171;
+
+  /* Misc */
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.6);
+  --radius: 18px;
+  --radius-sm: 12px;
+  --radius-xs: 8px;
+  --transition: 220ms ease;
+  --glass: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+/* ============================== */
+/*         GLOBAL BODY            */
+/* ============================== */
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* ============================== */
+/*          LINKS                 */
+/* ============================== */
+
+a {
+  color: var(--text);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+/* ============================== */
+/*         BUTTONS                */
+/* ============================== */
+
+button {
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition);
+  font-weight: 700;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.btn,
+button.primary {
+  background: var(--gradient);
+  color: #111;
+  padding: 12px 24px;
+  border-radius: var(--radius-sm);
+  font-weight: 800;
+  box-shadow: 0 4px 15px var(--accent-glow);
+}
+
+.btn:hover,
+button.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px var(--accent-glow);
+  filter: brightness(1.05);
+}
+
+button.secondary {
+  background: transparent;
+  color: var(--accent);
+  border: 2px solid rgba(251, 191, 36, 0.4);
+  padding: 12px 24px;
+}
+
+button.secondary:hover {
+  border-color: var(--accent);
+  background: rgba(251, 191, 36, 0.08);
+}
+
+button.danger {
+  background: rgba(248, 113, 113, 0.12);
+  color: #fca5a5;
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  padding: 10px 18px;
+}
+
+button.danger:hover {
+  background: rgba(248, 113, 113, 0.2);
+  transform: translateY(-1px);
+}
+
+button.ghost {
+  background: var(--glass);
+  color: var(--text);
+  border: 1px solid var(--glass-border);
+  padding: 10px 18px;
+}
+
+button.ghost:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ============================== */
+/*         INPUTS                 */
+/* ============================== */
+
+input,
+textarea,
+select {
+  width: 100%;
+  background: var(--glass);
+  color: var(--text);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 13px 16px;
+  outline: none;
+  transition: all var(--transition);
+  font-family: inherit;
+  font-size: 14px;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* ============================== */
+/*       CARDS & CONTAINERS       */
+/* ============================== */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  transition: all var(--transition);
+}
+
+.card:hover {
+  background: var(--card-hover);
+  border-color: rgba(251, 191, 36, 0.15);
+  transform: translateY(-2px);
+}
+
+/* ============================== */
+/*          BADGES                */
+/* ============================== */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: var(--gradient);
+  color: #111;
+  font-weight: 800;
+  font-size: 12px;
+}
+
+/* ============================== */
+/*          TABLES                */
+/* ============================== */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+th,
+td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--card-border);
+  text-align: left;
+}
+
+th {
+  background: rgba(251, 191, 36, 0.06);
+  color: var(--accent);
+  font-weight: 800;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+td {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* ============================== */
+/*       UTILITY ANIMATIONS       */
+/* ============================== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* ============================== */
+/*        SCROLLBAR               */
+/* ============================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}

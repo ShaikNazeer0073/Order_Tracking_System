@@ -8,6 +8,7 @@ function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPass, setShowPass] = useState(false);
   const [role, setRole] = useState("user");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -27,7 +28,7 @@ function Register() {
       const data = await res.json();
 
       if (res.ok) {
-        setSuccess("Registered successfully! Redirecting to login...");
+        setSuccess("Account created! Redirecting to login...");
         setName("");
         setEmail("");
         setPassword("");
@@ -43,48 +44,73 @@ function Register() {
   };
 
   return (
-    <div className="register-container">
-      <div className="register-card">
-        <h2>Create Account ✨</h2>
-        <p className="subtitle">Sign up to start tracking orders</p>
+    <div className="auth-container">
+      <div className="auth-bg-orb auth-orb-1"></div>
+      <div className="auth-bg-orb auth-orb-2"></div>
 
-        {error && <div className="error">{error}</div>}
-        {success && <div className="success">{success}</div>}
+      <div className="auth-card">
+        <div className="auth-icon">✨</div>
+        <h2>Create Account</h2>
+        <p className="auth-subtitle">Sign up to start tracking orders</p>
+
+        {error && <div className="auth-error">{error}</div>}
+        {success && <div className="auth-success">{success}</div>}
 
         <form onSubmit={handleRegister}>
-          <input
-            type="text"
-            placeholder="Full Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
+          <div className="auth-field">
+            <label>Full Name</label>
+            <input
+              type="text"
+              placeholder="John Doe"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
 
-          <input
-            type="email"
-            placeholder="Email address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <div className="auth-field">
+            <label>Email</label>
+            <input
+              type="email"
+              placeholder="john@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div className="auth-field">
+            <label>Password</label>
+            <div className="pass-wrap">
+              <input
+                type={showPass ? "text" : "password"}
+                placeholder="Create a strong password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button
+                type="button"
+                className="pass-toggle"
+                onClick={() => setShowPass(!showPass)}
+              >
+                {showPass ? "🙈" : "👁️"}
+              </button>
+            </div>
+          </div>
 
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-          </select>
+          <div className="auth-field">
+            <label>Role</label>
+            <select value={role} onChange={(e) => setRole(e.target.value)}>
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
 
-          <button type="submit">Sign Up</button>
+          <button type="submit" className="auth-submit">Create Account</button>
         </form>
 
-        <p className="bottom-text">
+        <p className="auth-footer">
           Already have an account? <Link to="/login">Login</Link>
         </p>
       </div>

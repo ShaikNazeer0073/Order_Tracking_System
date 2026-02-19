@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
 import "./Dashboard.css";
 import Navbar from "../components/Navbar";
-
+import PaymentModal from "../components/PaymentModal";
 
 function MyOrders() {
   const [orders, setOrders] = useState([]);
   const [editId, setEditId] = useState(null);
   const [productName, setProductName] = useState("");
   const [quantity, setQuantity] = useState(1);
+
+  const [payOpen, setPayOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   const token = localStorage.getItem("token");
 
@@ -24,14 +27,6 @@ function MyOrders() {
     // eslint-disable-next-line
   }, []);
 
-  const handlePay = async (id) => {
-    const res = await fetch(`http://localhost:5000/api/orders/pay/${id}`, {
-      method: "PUT",
-      headers: { Authorization: "Bearer " + token },
-    });
-    if (res.ok) fetchOrders();
-  };
-
   const startEdit = (o) => {
     setEditId(o._id);
     setProductName(o.productName);
@@ -47,6 +42,7 @@ function MyOrders() {
       },
       body: JSON.stringify({ productName, quantity }),
     });
+
     if (res.ok) {
       setEditId(null);
       fetchOrders();
@@ -66,74 +62,118 @@ function MyOrders() {
     alert("✅ Order ID copied!");
   };
 
+  // ✅ Called when user clicks "Payment Done" inside modal
+  const confirmPaid = async () => {
+    if (!selectedOrder) return;
+
+    const res = await fetch(
+      `http://localhost:5000/api/orders/pay/${selectedOrder._id}`,
+      {
+        method: "PUT",
+        headers: { Authorization: "Bearer " + token },
+      }
+    );
+
+    if (res.ok) {
+      setPayOpen(false);
+      setSelectedOrder(null);
+      fetchOrders();
+    }
+  };
+
   return (
-    <div className="dashboard-container">
-      <div className="dashboard-header">
-        <h1>My Orders 🧾</h1>
-      </div>
+    <>
+      <Navbar />
 
-      <div className="orders-section">
-        {orders.length === 0 ? (
-          <p>No orders found</p>
-        ) : (
-          orders.map((o) => (
-            <div key={o._id} className="order-card">
-              <h4>{o.productName}</h4>
+      <div className="dashboard-container">
+        <div className="dashboard-header">
+          <h1>My Orders 🧾</h1>
+        </div>
 
-              {/* ✅ SHOW ORDER ID */}
-              <p>
-                <strong>Order ID:</strong> {o._id}{" "}
-                <button
-                  style={{
-                    marginLeft: 8,
-                    padding: "4px 10px",
-                    borderRadius: 8,
-                    border: "none",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => copyId(o._id)}
-                >
-                  Copy 📋
-                </button>
-              </p>
+        <div className="orders-section">
+          {orders.length === 0 ? (
+            <p>No orders found</p>
+          ) : (
+            orders.map((o) => (
+              <div key={o._id} className="order-card">
+                <h4>{o.productName}</h4>
 
-              <p>Qty: {o.quantity}</p>
-              <p>Status: {o.status}</p>
-              <p>Payment: {o.paymentStatus}</p>
+                <p>
+                  <strong>Order ID:</strong> {o._id}{" "}
+                  <button
+                    style={{
+                      marginLeft: 8,
+                      padding: "4px 10px",
+                      borderRadius: 8,
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => copyId(o._id)}
+                  >
+                    Copy 📋
+                  </button>
+                </p>
 
-              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                {!o.isPaid && (
-                  <button onClick={() => handlePay(o._id)}>Pay Now 💳</button>
-                )}
-                <button onClick={() => startEdit(o)}>Edit ✏️</button>
-                <button onClick={() => deleteOrder(o._id)}>Delete 🗑️</button>
+                <p>Qty: {o.quantity}</p>
+                <p>Status: {o.status}</p>
+                <p>Payment: {o.paymentStatus}</p>
+
+                <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                  {!o.isPaid && (
+                    <button
+                      onClick={() => {
+                        setSelectedOrder(o);
+                        setPayOpen(true);
+                      }}
+                    >
+                      Pay Now 💳
+                    </button>
+                  )}
+
+                  <button onClick={() => startEdit(o)}>Edit ✏️</button>
+                  <button onClick={() => deleteOrder(o._id)}>Delete 🗑️</button>
+                </div>
               </div>
+            ))
+          )}
+        </div>
+
+        {editId && (
+          <div className="create-order-card">
+            <h3>Edit Order</h3>
+
+            <input
+              type="text"
+              value={productName}
+              onChange={(e) => setProductName(e.target.value)}
+            />
+
+            <input
+              type="number"
+              min="1"
+              value={quantity}
+              onChange={(e) => setQuantity(Number(e.target.value))}
+            />
+
+            <div style={{ display: "flex", gap: 10 }}>
+              <button onClick={saveEdit}>Save ✅</button>
+              <button onClick={() => setEditId(null)}>Cancel</button>
             </div>
-          ))
+          </div>
         )}
       </div>
 
-      {editId && (
-        <div className="create-order-card">
-          <h3>Edit Order</h3>
-          <input
-            type="text"
-            value={productName}
-            onChange={(e) => setProductName(e.target.value)}
-          />
-          <input
-            type="number"
-            min="1"
-            value={quantity}
-            onChange={(e) => setQuantity(Number(e.target.value))}
-          />
-          <div style={{ display: "flex", gap: 10 }}>
-            <button onClick={saveEdit}>Save ✅</button>
-            <button onClick={() => setEditId(null)}>Cancel</button>
-          </div>
-        </div>
-      )}
-    </div>
+      {/* ✅ Payment Modal */}
+      <PaymentModal
+        open={payOpen}
+        onClose={() => {
+          setPayOpen(false);
+          setSelectedOrder(null);
+        }}
+        order={selectedOrder}
+        onPaid={confirmPaid}
+      />
+    </>
   );
 }
 

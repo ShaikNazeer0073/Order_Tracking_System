@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Navbar from "../components/Navbar";
 import "./Dashboard.css";
 
 function CreateOrder() {
@@ -46,41 +47,49 @@ function CreateOrder() {
   };
 
   return (
-    <div className="dashboard-container">
-      <div className="dashboard-header">
-        <h1>Create Order 📦</h1>
+    <>
+      <Navbar />
+
+      <div className="dashboard-container">
+        <div className="dashboard-header">
+          <h1>Create Order 📦</h1>
+        </div>
+
+        <div className="create-order-card">
+          <h3>New Order</h3>
+          {msg && <p>{msg}</p>}
+
+          <form onSubmit={createOrder}>
+            <input
+              type="text"
+              placeholder="Product Name"
+              value={productName}
+              onChange={(e) => setProductName(e.target.value)}
+              required
+            />
+
+            <input
+              type="number"
+              min="1"
+              value={quantity}
+              onChange={(e) => setQuantity(Number(e.target.value))}
+              required
+            />
+
+            <button type="submit">Create Order</button>
+          </form>
+
+          {createdOrder && (
+            <div style={{ marginTop: 16 }}>
+              <p>
+                <strong>Order ID:</strong> {createdOrder._id}
+              </p>
+              <button onClick={copyId}>Copy Order ID 📋</button>
+            </div>
+          )}
+        </div>
       </div>
-
-      <div className="create-order-card">
-        <h3>New Order</h3>
-        {msg && <p>{msg}</p>}
-
-        <form onSubmit={createOrder}>
-          <input
-            type="text"
-            placeholder="Product Name"
-            value={productName}
-            onChange={(e) => setProductName(e.target.value)}
-            required
-          />
-          <input
-            type="number"
-            min="1"
-            value={quantity}
-            onChange={(e) => setQuantity(Number(e.target.value))}
-            required
-          />
-          <button type="submit">Create Order</button>
-        </form>
-
-        {createdOrder && (
-          <div style={{ marginTop: 16 }}>
-            <p><strong>Order ID:</strong> {createdOrder._id}</p>
-            <button onClick={copyId}>Copy Order ID 📋</button>
-          </div>
-        )}
-      </div>
-    </div>
+    </>
   );
 }
 
